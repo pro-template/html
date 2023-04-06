@@ -1,28 +1,39 @@
-const { resolve } = require("path");
-const webpack = require("webpack");
-const htmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const ProgressBarPlugin = require("progress-bar-webpack-plugin");
+const path = require('path');
+const webpack = require('webpack');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: {
+    index: './src/index.ts',
+  },
   output: {
-    path: resolve(__dirname, "dist"),
-    filename: "bundle.js",
+    filename: '[name].js',
+    path: path.resolve(__dirname, 'dist'),
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(ts|tsx)$/,
+        use: 'babel-loader',
+      },
+    ],
   },
   devServer: {
+    compress: true,
     port: 9000,
-    open: true,
   },
-  cache: false,
-  devtool: "source-map",
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+  },
   plugins: [
     new CleanWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new ProgressBarPlugin(),
     new htmlWebpackPlugin({
-      template: resolve(__dirname, "./public/index.html"),
+      template: path.resolve(__dirname, './public/index.html'),
     }),
   ],
-  mode: "development",
+  mode: 'development',
 };
